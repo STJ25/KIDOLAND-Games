@@ -215,7 +215,7 @@ Centralized audio controller using a simple pooled system.
 
 ---
 
-# 📷 Camera System
+# Camera System
 
 ## **CameraShake**
 
@@ -229,7 +229,7 @@ Adds screen shake effect on Game Over.
 
 ---
 
-# ⏱️ Game State Control
+# Game State Control
 
 ## Time Management
 
