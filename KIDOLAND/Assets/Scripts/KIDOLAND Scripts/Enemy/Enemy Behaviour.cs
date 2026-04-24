@@ -18,6 +18,10 @@ public class EnemyBehaviour : MonoBehaviour
     [Header("Patrol")]
     [SerializeField] private List<Transform> patrolPoints;
 
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
     private Rigidbody2D rb;
     private Transform player;
 
@@ -25,7 +29,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     private int currentPatrolIndex;
     private Transform currentTargetPoint;
-
+    private Vector2 lastDirection = Vector2.down; // default Idle
 
     private void OnEnable()
     {
@@ -72,6 +76,8 @@ public class EnemyBehaviour : MonoBehaviour
                 HandleReturn();
                 break;
         }
+
+        UpdateAnimation();
     }
 
     private void HandlePatrol()
@@ -160,5 +166,41 @@ public class EnemyBehaviour : MonoBehaviour
 
             GameEvents.TriggerGameOver();
         }
+    }
+
+    private Vector2 GetSnappedDirection(Vector2 dir) //Direct copy from the Player
+    {
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+        if (angle < 0) angle += 360f;
+
+        if (angle >= 337.5f || angle < 22.5f) return Vector2.right;
+        if (angle < 67.5f) return new Vector2(1, 1).normalized;
+        if (angle < 112.5f) return Vector2.up;
+        if (angle < 157.5f) return new Vector2(-1, 1).normalized;
+        if (angle < 202.5f) return Vector2.left;
+        if (angle < 247.5f) return new Vector2(-1, -1).normalized;
+        if (angle < 292.5f) return Vector2.down;
+        return new Vector2(1, -1).normalized;
+    }
+
+    private void UpdateAnimation() // same as Player
+    {
+        Vector2 velocity = rb.linearVelocity;
+
+        bool isMoving = velocity.sqrMagnitude > 0.0025f; // ~0.05 threshold
+
+        if (isMoving)
+        {
+            Vector2 dir = velocity.normalized;
+            lastDirection = GetSnappedDirection(dir);
+        }
+
+        animator.SetFloat("moveX", lastDirection.x);
+        animator.SetFloat("moveY", lastDirection.y);
+        animator.SetBool("isMoving", isMoving);
+
+        if (lastDirection.x != 0)
+            spriteRenderer.flipX = lastDirection.x > 0;
     }
 }

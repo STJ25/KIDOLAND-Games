@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b8a16086b14a9f4db9cc6e1dfeecc56, type: 3}
   m_Name: Base Enemy
   m_EditorClassIdentifier: 
-  moveSpeed: 2
+  moveSpeed: 3
   chaseMultiplier: 2
