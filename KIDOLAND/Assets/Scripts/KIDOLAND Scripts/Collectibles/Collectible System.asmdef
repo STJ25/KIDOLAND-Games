@@ -1,0 +1,16 @@
+{
+    "name": "CollectibleSystem",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8c9eeb348e86ba948b609b8d18b57182"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
