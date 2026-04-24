@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviour
     private void HandleGameOver()
     {
         SetGameOverUI(true);
+        Time.timeScale = 0f; // Stop moving
     }
 
     private void HandleCollectible(int value)
@@ -55,6 +56,7 @@ public class UIManager : MonoBehaviour
 
     public void RestartLevel()
     {
+        Time.timeScale = 1f; // set evrything to normal
         Scene currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.buildIndex);
     }
