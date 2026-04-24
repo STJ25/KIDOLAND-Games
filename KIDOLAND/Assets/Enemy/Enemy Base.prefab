@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3995607349491339265}
   - component: {fileID: 922728921519310440}
   - component: {fileID: 8838962240049938519}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ Rigidbody2D:
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &3995607349491339265
 MonoBehaviour:
   m_ObjectHideFlags: 0

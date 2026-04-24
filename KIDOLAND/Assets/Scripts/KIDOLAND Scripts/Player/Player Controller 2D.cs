@@ -1,8 +1,13 @@
 using UnityEngine;
-
+/// <summary>
+/// Rigidbody based 2D Player controller. 8 Directional Movement with animations.
+/// Flips sprites on the X axis for opposite Directions and Animations
+/// Uses Old Input system.
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController2D : MonoBehaviour
 {
+#region Inspector
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -12,7 +17,9 @@ public class PlayerController2D : MonoBehaviour
     private Vector2 input;
     private Vector2 movement;
     private Vector2 lastDirection = Vector2.down;
+#endregion
 
+#region Unity Cycle and Events
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -36,7 +43,9 @@ public class PlayerController2D : MonoBehaviour
     {
         rb.linearVelocity = movement * moveSpeed;
     }
+#endregion
 
+#region Directional and Animation logic
     private Vector2 GetSnappedDirection(Vector2 dir)
     {
         dir.Normalize();
@@ -67,4 +76,7 @@ public class PlayerController2D : MonoBehaviour
         if (lastDirection.x != 0)
             spriteRenderer.flipX = lastDirection.x > 0;
     }
+
+#endregion
+
 }

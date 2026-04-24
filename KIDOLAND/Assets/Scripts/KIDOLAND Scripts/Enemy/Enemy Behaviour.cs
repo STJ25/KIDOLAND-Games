@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+/// <summary>
+/// Base Enemy behaviour script. Handles Enemy Behaviour based on the logic from the Enemy data Scriptable object
+/// Subscribes to Trigger Game events for player detection in teh trigger area script.
+/// Has a Switch case logic for Enemy state along with an enum class for state definitions. Shares similar animations with the PLayer 
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyBehaviour : MonoBehaviour
 {
@@ -11,7 +15,7 @@ public class EnemyBehaviour : MonoBehaviour
         ReturnToPatrol,
         GameOver
     }
-
+#region Inspector
     [Header("Data")]
     [SerializeField] private EnemyData data;
 
@@ -29,8 +33,10 @@ public class EnemyBehaviour : MonoBehaviour
 
     private int currentPatrolIndex;
     private Transform currentTargetPoint;
-    private Vector2 lastDirection = Vector2.down; // default Idle
+    private Vector2 lastDirection = Vector2.down; // default Idle direction
+#endregion
 
+#region Unity Cycle / Event Subscription
     private void OnEnable()
     {
         EnemyTriggerArea.OnPlayerEnter += OnPlayerEntered;
@@ -65,22 +71,24 @@ public class EnemyBehaviour : MonoBehaviour
         switch (currentState)
         {
             case EnemyState.Patrol:
-                HandlePatrol();
+                Patrol();
                 break;
 
             case EnemyState.Chase:
-                HandleChase();
+                Chase();
                 break;
 
             case EnemyState.ReturnToPatrol:
-                HandleReturn();
+                Return();
                 break;
         }
 
         UpdateAnimation();
     }
+#endregion
 
-    private void HandlePatrol()
+#region Enemy Functionalities and Events 
+    private void Patrol()
     {
         if (currentTargetPoint == null) return;
 
@@ -93,7 +101,7 @@ public class EnemyBehaviour : MonoBehaviour
         }
     }
 
-    private void HandleChase()
+    private void Chase()
     {
         if (player == null) return;
 
@@ -101,7 +109,7 @@ public class EnemyBehaviour : MonoBehaviour
         MoveTowards(player.position, speed);
     }
 
-    private void HandleReturn()
+    private void Return()
     {
         if (currentTargetPoint == null) return;
 
@@ -117,22 +125,6 @@ public class EnemyBehaviour : MonoBehaviour
     {
         Vector2 direction = (target - (Vector2)transform.position).normalized;
         rb.linearVelocity = direction * speed;
-    }
-
-    // ===== EVENT HOOKS =====
-
-    public void OnPlayerEntered(Transform playerTransform)
-    {
-        player = playerTransform;
-        currentState = EnemyState.Chase;
-    }
-
-    public void OnPlayerExited()
-    {
-        player = null;
-
-        SetNearestPatrolPoint();
-        currentState = EnemyState.ReturnToPatrol;
     }
 
     private void SetNearestPatrolPoint()
@@ -153,9 +145,26 @@ public class EnemyBehaviour : MonoBehaviour
         currentPatrolIndex = nearestIndex;
         currentTargetPoint = patrolPoints[currentPatrolIndex];
     }
+#endregion
 
-    // ===== COLLISION =====
+#region Player detection events
+    public void OnPlayerEntered(Transform playerTransform)
+    {
+        player = playerTransform;
+        currentState = EnemyState.Chase;
+    }
 
+    public void OnPlayerExited()
+    {
+        player = null;
+
+        SetNearestPatrolPoint();
+        currentState = EnemyState.ReturnToPatrol;
+    }
+
+#endregion
+
+#region Collision Game over Logic
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -167,7 +176,9 @@ public class EnemyBehaviour : MonoBehaviour
             GameEvents.TriggerGameOver();
         }
     }
+#endregion
 
+#region Animation
     private Vector2 GetSnappedDirection(Vector2 dir) //Direct copy from the Player
     {
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
@@ -203,4 +214,5 @@ public class EnemyBehaviour : MonoBehaviour
         if (lastDirection.x != 0)
             spriteRenderer.flipX = lastDirection.x > 0;
     }
+#endregion
 }

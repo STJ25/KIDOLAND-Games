@@ -1,9 +1,15 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-
+/// <summary>
+/// UI Monobehaviour Singleton that Handles UI logic and events.
+/// Subscribes to events to update Score UI.
+/// Uses Restart level to replay level using Scene Management.
+/// </summary>
 public class UIManager : MonoBehaviour
 {
+#region Inspector
+
     [Header("Game Over UI")]
     [SerializeField] private CanvasGroup gameOverPanel;
 
@@ -11,7 +17,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
 
     private int score;
+#endregion
 
+#region Unity Cycle and Events Subs
     private void Awake()
     {
         SetGameOverUI(false);
@@ -29,6 +37,9 @@ public class UIManager : MonoBehaviour
         GameEvents.OnGameOver -= HandleGameOver;
         GameEvents.OnCollectiblePicked -= HandleCollectible;
     }
+#endregion
+
+#region Private Events and Functions
 
     private void HandleGameOver()
     {
@@ -53,7 +64,9 @@ public class UIManager : MonoBehaviour
         gameOverPanel.interactable = state;
         gameOverPanel.blocksRaycasts = state;
     }
+#endregion
 
+    // Set on the button to restart level.
     public void RestartLevel()
     {
         Time.timeScale = 1f; // set evrything to normal

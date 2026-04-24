@@ -1,9 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 using NUnit.Framework;
-
+/// <summary>
+/// Simple but Optimal Singleton audio Manager for the Scene. Generates audio sources dynamically.
+/// Stores references to the Audio clips and their volumes.
+/// Uses existing Game events Events to call and Play SFXs
+/// Implemented Object pool for SFXs for multiple smooth activations
+/// </summary>
 public class AudioManager : MonoBehaviour
 {
+#region Inspector
     public static AudioManager Instance;
 
     [Header("Audio Clips")]
@@ -27,7 +33,9 @@ public class AudioManager : MonoBehaviour
 
     private AudioSource musicSource; // Will add audio source dynamically
     private bool hasGameOverPlayed;
+#endregion
 
+#region Unity Cycle and Events Subscription
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -52,7 +60,9 @@ public class AudioManager : MonoBehaviour
         GameEvents.OnCollectiblePicked -= PlayCollectible;
         GameEvents.OnGameOver -= PlayGameOver;
     }
+#endregion
 
+#region Audio Manager Private Functions
     private void InitializeAudio()
     {
         // Music Source
@@ -88,8 +98,9 @@ public class AudioManager : MonoBehaviour
         float finalVolume = volume *sfxVolume;
         source.PlayOneShot(clip, finalVolume);
     }
+#endregion
 
-    // ===== PUBLIC / EVENT METHODS =====
+#region Public Events to call from Other scripts
 
     public void PlayCollectible(int _)
     {
@@ -116,4 +127,6 @@ public class AudioManager : MonoBehaviour
         musicSource.clip = backgroundMusic;
         musicSource.Play();
     }
+#endregion
+
 }

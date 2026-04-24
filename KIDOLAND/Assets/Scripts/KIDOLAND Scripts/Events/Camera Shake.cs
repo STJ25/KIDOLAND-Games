@@ -1,5 +1,8 @@
 using UnityEngine;
-
+/// <summary>
+/// Simple Camera Shake for Game feel inGame.
+/// Pretty Self Explanatory
+/// </summary>
 public class CameraShake : MonoBehaviour
 {
     [SerializeField] private float duration = 0.3f;

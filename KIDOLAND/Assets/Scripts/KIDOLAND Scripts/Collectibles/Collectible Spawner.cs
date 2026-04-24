@@ -1,8 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// This is the Collectible spawner script that handles all the collectible spwaning logic.
+/// it's major functions include, Handling Spawning and Removing collectibles from the scene
+/// Very scalable system for any type of collectible
+/// </summary>
+
+
 public class CollectibleSpawner : MonoBehaviour
 {
+#region Inspector 
+
     [Header("Setup")]
     [SerializeField] private GameObject collectiblePrefab;
 
@@ -20,6 +29,8 @@ public class CollectibleSpawner : MonoBehaviour
     private List<GameObject> pool = new List<GameObject>();
     private List<GameObject> activeCollectibles = new List<GameObject>();
 
+#endregion
+#region Unity Cycle   
     private void Awake()
     {
         InitializePool();
@@ -42,7 +53,9 @@ public class CollectibleSpawner : MonoBehaviour
             SpawnFromPool();
         }
     }
+#endregion
 
+#region Spawn and Handling Functions
     private void InitializePool()
     {
         for (int i = 0; i < poolSize; i++)
@@ -102,7 +115,7 @@ public class CollectibleSpawner : MonoBehaviour
                 return candidate;
         }
 
-        // fallback (rare)
+        // fallback (its rare but considereing rare)
         return GetRandomPosition();
     }
 
@@ -131,6 +144,9 @@ public class CollectibleSpawner : MonoBehaviour
         return true;
     }
 
+#endregion
+    
+    //Gizmos for Debugging
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
